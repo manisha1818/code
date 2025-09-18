@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Entrepreneur Service</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 550px;
+      margin: 20px auto;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #333;
+      font-size: 20px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .alert-box {
+      margin-top: 20px;
+      background: #e8f0fe;
+      padding: 15px;
+      border: 1px solid #007bff;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>Student Entrepreneur Service</header>
+
+  <!-- Role Selection -->
+  <div class="container" id="roleSection">
+    <h2>Select Role</h2>
+    <button onclick="chooseRole('worker')">Register as Worker (Student)</button>
+    <button onclick="chooseRole('customer')">Register as Customer</button>
+  </div>
+
+  <!-- Worker Signup -->
+  <div class="container" id="workerSignup" style="display:none;">
+    <h2>Worker Registration</h2>
+    <form onsubmit="return false;">
+      <label>Full Name:</label>
+      <input type="text" placeholder="Enter your name" required>
+
+      <label>Age:</label>
+      <input type="number" id="age" placeholder="Enter your age" required>
+
+      <label>Email ID:</label>
+      <input type="email" id="emailWorker" placeholder="Enter email" required>
+
+      <label>Password:</label>
+      <input type="password" placeholder="Create password" required>
+
+      <label>ID Proof (10+2 Certificate):</label>
+      <input type="file" required>
+
+      <button type="button" onclick="showWorkerProfile()">Next →</button>
+    </form>
+  </div>
+
+  <!-- Worker Profile Section -->
+  <div class="container" id="workerProfile" style="display:none;">
+    <h2>Worker Profile Details</h2>
+    <form onsubmit="return false;">
+      <label>Upload Resume:</label>
+      <input type="file" required>
+
+      <label>Enter Address:</label>
+      <input type="text" placeholder="Enter your address" required>
+
+      <label>Enter Phone Number:</label>
+      <input type="text" placeholder="Enter your phone number" required>
+
+      <label>Select Skill Category:</label>
+      <select id="skillCategory" onchange="showSubOptions()">
+        <option value="">-- Choose Category --</option>
+        <option value="teaching">Teaching</option>
+        <option value="events">Events</option>
+        <option value="parttime">Part-Time Jobs</option>
+      </select>
+
+      <div id="subOptions" style="margin-top:15px;"></div>
+
+      <button type="button" onclick="showWorkerAlerts()">Submit →</button>
+    </form>
+  </div>
+
+  <!-- Customer Signup -->
+  <div class="container" id="customerSignup" style="display:none;">
+    <h2>Customer Registration</h2>
+    <form onsubmit="return false;">
+      <label>Full Name:</label>
+      <input type="text" placeholder="Enter your name" required>
+
+      <label>Email ID:</label>
+      <input type="email" id="emailCustomer" placeholder="Enter email" required>
+
+      <label>Password:</label>
+      <input type="password" placeholder="Create password" required>
+
+      <label>Required Service:</label>
+      <select id="customerService">
+        <option>Physics Teacher</option>
+        <option>Maths Teacher</option>
+        <option>Birthday Event</option>
+        <option>Marriage Event</option>
+        <option>Delivery Boy</option>
+        <option>Mehndi Designer</option>
+      </select>
+
+      <button type="button" onclick="showCustomerAlerts()">Submit →</button>
+    </form>
+  </div>
+
+  <!-- Alerts Section -->
+  <div class="container" id="alertSection" style="display:none;">
+    <h2>Alerts</h2>
+    <div id="alerts"></div>
+  </div>
+
+  <script>
+    let role = "";
+    let selectedSkill = "";
+    let selectedSub = "";
+    let selectedMode = "";
+    let studentEmail = "";
+    let customerEmail = "";
+
+    function chooseRole(r) {
+      role = r;
+      document.getElementById("roleSection").style.display = "none";
+      if (r === "worker") {
+        document.getElementById("workerSignup").style.display = "block";
+      } else {
+        document.getElementById("customerSignup").style.display = "block";
+      }
+    }
+
+    function showWorkerProfile() {
+      const age = parseInt(document.getElementById("age").value);
+      if (age > 20) {
+        alert("Only students with age ≤ 20 are eligible as workers!");
+        return;
+      }
+      studentEmail = document.getElementById("emailWorker").value;
+      document.getElementById("workerSignup").style.display = "none";
+      document.getElementById("workerProfile").style.display = "block";
+    }
+
+    function showSubOptions() {
+      const category = document.getElementById('skillCategory').value;
+      let options = "";
+      if (category === "teaching") {
+        options = `
+          <label>Select Teaching Subject:</label>
+          <select id="subSkill">
+            <option>Physics Teacher</option>
+            <option>Maths Teacher</option>
+            <option>Biology Teacher</option>
+            <option>Chemistry Teacher</option>
+            <option>English Teacher</option>
+          </select>
+          <label>Preferred Mode:</label>
+          <select id="teachMode">
+            <option>Virtual</option>
+            <option>Offline</option>
+          </select>
+        `;
+      } else if (category === "events") {
+        options = `
+          <label>Select Event Type:</label>
+          <select id="subSkill">
+            <option>Birthday Party</option>
+            <option>Festival Event</option>
+            <option>Marriage Event</option>
+            <option>College Function</option>
+          </select>
+        `;
+      } else if (category === "parttime") {
+        options = `
+          <label>Select Part-Time Job:</label>
+          <select id="subSkill">
+            <option>Delivery Boy</option>
+            <option>Mehndi Designer</option>
+            <option>Decoration Helper</option>
+            <option>Assistant Photographer</option>
+          </select>
+        `;
+      }
+      selectedSkill = category;
+      document.getElementById('subOptions').innerHTML = options;
+    }
+
+    function showWorkerAlerts() {
+      selectedSub = document.getElementById("subSkill")?.value || "";
+      selectedMode = document.getElementById("teachMode")?.value || "";
+      document.getElementById("workerProfile").style.display = "none";
+      document.getElementById("alertSection").style.display = "block";
+
+      let alertMessage = `
+        <div class="alert-box">
+          <p>✅ Worker Registration successful!</p>
+          <p>Currently available opportunities based on your skill:</p>
+      `;
+      if (selectedSkill === "teaching") {
+        alertMessage += <p>🔔 A client is looking for a <b>${selectedSub}</b> (${selectedMode} Mode).</p>;
+      } else if (selectedSkill === "events") {
+        alertMessage += <p>🔔 A client needs help for a <b>${selectedSub}</b>.</p>;
+      } else if (selectedSkill === "parttime") {
+        alertMessage += <p>🔔 A company is hiring for <b>${selectedSub}</b>.</p>;
+      }
+      alertMessage += <p>📧 Further alerts will be sent to your registered email: <b>${studentEmail}</b>.</p></div>;
+      document.getElementById("alerts").innerHTML = alertMessage;
+    }
+
+    function showCustomerAlerts() {
+      customerEmail = document.getElementById("emailCustomer").value;
+      const service = document.getElementById("customerService").value;
+      document.getElementById("customerSignup").style.display = "none";
+      document.getElementById("alertSection").style.display = "block";
+
+      let alertMessage = `
+        <div class="alert-box">
+          <p>✅ Customer Registration successful!</p>
+          <p>You requested service: <b>${service}</b>.</p>
+          <p>🔔 Matching worker details will be shared with you soon.</p>
+          <p>📧 Notifications will be sent to your registered email: <b>${customerEmail}</b>.</p>
+        </div>`;
+      document.getElementById("alerts").innerHTML = alertMessage;
+    }
+  </script>
+</body>
+</html>
